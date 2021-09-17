@@ -37,11 +37,11 @@
   "size-limit": [
     {
       "path": "dist/mempool-address-balance.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "35 KB"
     },
     {
       "path": "dist/mempool-address-balance.esm.js",
-      "limit": "10 KB"
+      "limit": "35 KB"
     }
   ],
   "devDependencies": {

@@ -1,4 +1,7 @@
-var _ = require('lodash');
+import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
+import concat from 'lodash/concat';
+import orderBy from 'lodash/orderBy';
 
 import { Tx, Vout } from '@mempool/mempool.js/lib/interfaces/bitcoin/transactions';
 type VinArray = Tx['vin']; // hack to simulate missing type export
@@ -28,11 +31,11 @@ export const processTransactions = (address: string, txs: Tx[]): BusinessTxData[
   let utxos: BusinessTxData[] = [];
   for (const tx of txs) {
     const ret = processTransaction(address, tx);
-    utxos = _.concat(utxos, ret);
+    utxos = concat(utxos, ret);
   }
 
   const validTxs = utxos.filter(item => item.parsed);
-  const sortedValidTxs: BusinessTxData[] = _.orderBy(validTxs, ['block_height'], ['desc']);
+  const sortedValidTxs: BusinessTxData[] = orderBy(validTxs, ['block_height'], ['desc']);
   if ('development' === process.env.NODE_ENV) {
     console.info(`* Found last valid utxos`, JSON.stringify(sortedValidTxs));
   }
@@ -50,11 +53,11 @@ export const processTransaction = (address: string, tx: Tx): BusinessTxData => {
   if ('development' === process.env.NODE_ENV) {
     console.info(`Scanning txid: ${txid} for transactions by scriptpubkey_address=${address}`);
   }
-  const tx_vin: VinArray = _.get(tx, 'vin', []);
-  const tx_vout: VoutArray = _.get(tx, 'vout', []);
-  const block_time = new Date(_.get(tx, 'status.block_time', 0) * 1000).toISOString();
-  const block_height = _.get(tx, 'status.block_height', 0);
-  if (!txid || _.isEmpty(tx_vin) || _.isEmpty(tx_vout) || !_.get(tx, 'status.confirmed', false) || !block_height) {
+  const tx_vin: VinArray = get(tx, 'vin', []);
+  const tx_vout: VoutArray = get(tx, 'vout', []);
+  const block_time = new Date(get(tx, 'status.block_time', 0) * 1000).toISOString();
+  const block_height = get(tx, 'status.block_height', 0);
+  if (!txid || isEmpty(tx_vin) || isEmpty(tx_vout) || !get(tx, 'status.confirmed', false) || !block_height) {
     if ('development' === process.env.NODE_ENV) {
       console.info(`Skipping: empty invalid transaction: ${JSON.stringify(tx)}`);
     }
@@ -81,14 +84,14 @@ export const _parseVinVout = (
 ): { vin: BusinessTxIoRecord[]; vout: BusinessTxIoRecord[] } => {
   const extractVin = (arr: VinArray) =>
     arr.map(v => ({
-      scriptpubkey_address: _.get(v, 'prevout.scriptpubkey_address', ''),
-      value_btc: _.get(v, 'prevout.value', 0) / 100000000,
+      scriptpubkey_address: get(v, 'prevout.scriptpubkey_address', ''),
+      value_btc: get(v, 'prevout.value', 0) / 100000000,
     }));
 
   const extractVout = (arr: VoutArray) =>
     arr.map(v => ({
-      scriptpubkey_address: _.get(v, 'scriptpubkey_address', ''),
-      value_btc: _.get(v, 'value', 0) / 100000000,
+      scriptpubkey_address: get(v, 'scriptpubkey_address', ''),
+      value_btc: get(v, 'value', 0) / 100000000,
     }));
 
   return {

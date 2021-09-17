@@ -1,4 +1,4 @@
-# Mempool address balance updates
+# Mempool address balance updates [![CI](https://github.com/arnaudj/mempool-address-balance/actions/workflows/main.yml/badge.svg)](https://github.com/arnaudj/mempool-address-balance/actions/workflows/main.yml)
 
 This library computes balance updates for a given BTC address.
 

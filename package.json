@@ -34,6 +34,10 @@
   "name": "mempool-address-balance",
   "author": "Arnaud",
   "module": "dist/mempool-address-balance.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arnaudj/mempool-address-balance"
+  },
   "size-limit": [
     {
       "path": "dist/mempool-address-balance.cjs.production.min.js",
